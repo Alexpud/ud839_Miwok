@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,8 +19,14 @@ import java.util.ArrayList;
 
 public class WordAdapter extends ArrayAdapter<Word> {
 
-    public WordAdapter(Activity context, ArrayList<Word> words){
+    /**
+     * Resource ID for the background color for this list of words
+     */
+    private int activityColor = 0;
+
+    public WordAdapter(Activity context, ArrayList<Word> words, int activityColor){
         super(context, 0, words);
+        this.activityColor = activityColor;
     }
 
     @NonNull
@@ -33,11 +40,19 @@ public class WordAdapter extends ArrayAdapter<Word> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item,parent,false);
         }
 
+        convertView.setBackgroundColor(this.activityColor);
+
+        ImageView miwokImageView = (ImageView)convertView.findViewById(R.id.miwok_image_view);
         TextView defaultTextView = (TextView)convertView.findViewById(R.id.default_text_view);
         TextView miwokTextView = (TextView)convertView.findViewById(R.id.miwok_text_view);
 
         defaultTextView.setText(currentWord.getDefaultTranslation());
         miwokTextView.setText(currentWord.getMiwokTranslation());
+
+        if( currentWord.hasImage())
+            miwokImageView.setImageResource(currentWord.getImageResourceID());
+        else
+            miwokImageView.setVisibility(View.GONE);
 
         return convertView;
     }
